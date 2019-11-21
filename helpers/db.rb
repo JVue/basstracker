@@ -6,8 +6,8 @@ class DB
     @pg = PG.connect :hostaddr => Secrets.db_hostaddress, :dbname => Secrets.db_name, :user => Secrets.db_username, :password => Secrets.db_password
   end
 
-  def add_entry(date, time, angler, event, weight, weight_decimal, weight_oz)
-    response = @pg.exec "INSERT INTO basstracker (date, time, angler, event, weight, weight_decimal, weight_oz) VALUES(\'#{date}\', \'#{time}\', \'#{angler}\', \'#{event}\', \'#{weight}\', \'#{weight_decimal}\', \'#{weight_oz}\')"
+  def add_entry(date, time, angler, event, weight, weight_decimal, weight_oz, bass_type)
+    response = @pg.exec "INSERT INTO basstracker (date, time, angler, event, weight, weight_decimal, weight_oz, bass_type) VALUES(\'#{date}\', \'#{time}\', \'#{angler}\', \'#{event}\', \'#{weight}\', \'#{weight_decimal}\', \'#{weight_oz}\', \'#{bass_type}\')"
     return false if response.result_status != 1
     true
   end
@@ -54,8 +54,8 @@ class DB
     true
   end
 
-  def get_entry(time, date, angler, event, weight)
-    response = @pg.exec "SELECT * FROM basstracker WHERE date=\'#{date}\' AND time=\'#{time}\' AND angler=\'#{angler}\' AND event=\'#{event}\' AND weight=\'#{weight}\'"
+  def get_entry(time, date, angler, event, weight, bass_type)
+    response = @pg.exec "SELECT * FROM basstracker WHERE date=\'#{date}\' AND time=\'#{time}\' AND angler=\'#{angler}\' AND event=\'#{event}\' AND weight=\'#{weight}\' AND bass_type=\'#{bass_type}\'"
     return false if response.result_status == 0
     true
   end

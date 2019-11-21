@@ -28,8 +28,10 @@ end
 get '/basstracker/submit' do
   @angler_list = HTML.new.persist_angler(session[:angler]) if session[:angler]
   @event_list = HTML.new.persist_event(session[:event]) if session[:event]
-  @angler_list = HTML.new.anglers if session['angler'].nil?
-  @event_list = HTML.new.events if session['event'].nil?
+  @bass_type = HTML.new.persist_bass_type(session[:bass_type]) if session[:bass_type]
+  @angler_list = HTML.new.anglers if session[:angler].nil?
+  @event_list = HTML.new.events if session[:event].nil?
+  @bass_type = HTML.new.bass_type if session[:bass_type].nil?
   @angler_list_options = HTML.new.anglers
   @event_list_options = HTML.new.events
   erb :main
@@ -39,7 +41,8 @@ end
 post '/basstracker/submit_weight' do
   session[:angler] = params['angler']
   session[:event] = params['event']
-  response = Weight.new(params['angler'], params['event'], params['weight']).submit
+  session[:bass_type] = params['bass_type']
+  response = Weight.new(params['angler'], params['event'], params['weight'], params['bass_type']).submit
   if response != 'success'
     session[:err_message] = response
     redirect '/basstracker/error'

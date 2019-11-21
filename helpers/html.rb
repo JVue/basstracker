@@ -48,4 +48,26 @@ class HTML
     @db.close_db_connection
     list.join(',').gsub(',', "\n")
   end
+
+  def bass_type
+    <<~HTML
+    <input type="radio" name="bass_type" value="largemouth"> largemouth
+    <input type="radio" name="bass_type" value="smallmouth"> smallmouth
+    HTML
+  end
+
+  def persist_bass_type(bass_type_selected)
+    case bass_type_selected
+    when 'largemouth'
+      <<~HTML
+      <input type="radio" name="bass_type" value="largemouth" checked="checked"> largemouth
+      <input type="radio" name="bass_type" value="smallmouth"> smallmouth
+      HTML
+    when 'smallmouth'
+      <<~HTML
+      <input type="radio" name="bass_type" value="largemouth"> largemouth
+      <input type="radio" name="bass_type" value="smallmouth" checked="checked"> smallmouth
+      HTML
+    end
+  end
 end

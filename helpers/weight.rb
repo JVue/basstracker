@@ -1,13 +1,14 @@
 require_relative 'db'
 
 class Weight
-  def initialize(angler, event, weight)
+  def initialize(angler, event, weight, bass_type)
     @db = DB.new
     @date = Time.now.strftime("%m/%d/%Y")
     @time = Time.now.strftime("%I:%M %p")
     @angler_name = angler
     @event = event
     @weight = weight
+    @bass_type = bass_type
   end
 
   def submit
@@ -15,6 +16,7 @@ class Weight
     validate_angler
     validate_event
     validate_weight
+    validate_bass_type
 
     # add angler entry
     submit_angler_entry
@@ -52,6 +54,11 @@ class Weight
     true
   end
 
+  def validate_bass_type
+    raise "Error: Bass species (largemouth/smallmouth) not selected. Please select a species and try again." if @bass_type.nil? || @bass_type.empty?
+    raise "Error: Bass species type is invalid or missing." unless @bass_type.include?('largemouth') || @bass_type.include?('smallmouth')
+  end
+
   def decimal
     arr = @weight.split('-')
     (((arr[0].to_f * 16) + arr[1].to_f) / 16).to_f
@@ -63,13 +70,13 @@ class Weight
   end
 
   def submit_angler_entry
-    response = @db.add_entry(@date, @time, @angler_name, @event, @weight, decimal, ounces)
+    response = @db.add_entry(@date, @time, @angler_name, @event, @weight, decimal, ounces, @bass_type)
     raise 'ERROR: Submission failed.' if response == false
     true
   end
 
   def verify_submission
-    response = @db.get_entry(@date, @time, @angler_name, @event, @weight)
+    response = @db.get_entry(@date, @time, @angler_name, @event, @weight, @bass_type)
     raise 'ERROR: Submission validation failed.' if response == false
     true
   end
