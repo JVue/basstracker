@@ -6,6 +6,7 @@ require_relative 'helpers/html.rb'
 require_relative 'helpers/weight.rb'
 require_relative 'helpers/angler.rb'
 require_relative 'helpers/event.rb'
+require_relative 'helpers/lake.rb'
 
 # set port and binding
 set :bind, '0.0.0.0'
@@ -20,20 +21,37 @@ use Rack::Session::Cookie, :key => 'rack.session',
 before do
 end
 
+###########
+# methods #
+###########
+
+def session_info
+  # persist options for existing session
+  @angler_list = HTML.new.persist_angler(session[:angler]) if session[:angler]
+  @event_list = HTML.new.persist_event(session[:event]) if session[:event]
+  @bass_type = HTML.new.persist_bass_type(session[:bass_type]) if session[:bass_type]
+  @lake_list = HTML.new.persist_lake(session[:lake]) if session[:lake]
+
+  # new lists if no session found
+  @angler_list = HTML.new.anglers if session[:angler].nil?
+  @event_list = HTML.new.events if session[:event].nil?
+  @bass_type = HTML.new.bass_type if session[:bass_type].nil?
+  @lake_list = HTML.new.lakes if session[:lake].nil?
+
+  # for angler/event/lake options
+  @angler_list_options = HTML.new.anglers
+  @event_list_options = HTML.new.events
+  @lake_list_options = HTML.new.lakes
+end
+
 #############
 # Endpoints #
 #############
 
 # main page for submission
 get '/basstracker/submit' do
-  @angler_list = HTML.new.persist_angler(session[:angler]) if session[:angler]
-  @event_list = HTML.new.persist_event(session[:event]) if session[:event]
-  @bass_type = HTML.new.persist_bass_type(session[:bass_type]) if session[:bass_type]
-  @angler_list = HTML.new.anglers if session[:angler].nil?
-  @event_list = HTML.new.events if session[:event].nil?
-  @bass_type = HTML.new.bass_type if session[:bass_type].nil?
-  @angler_list_options = HTML.new.anglers
-  @event_list_options = HTML.new.events
+  session_info
+  @submit_message = session[:successful_submit]
   erb :main
 end
 
@@ -42,11 +60,13 @@ post '/basstracker/submit_weight' do
   session[:angler] = params['angler']
   session[:event] = params['event']
   session[:bass_type] = params['bass_type']
-  response = Weight.new(params['angler'], params['event'], params['weight'], params['bass_type']).submit
+  session[:lake] = params['lake']
+  response = Weight.new(params['angler'], params['event'], params['weight'], params['bass_type'], params['lake']).submit
   if response != 'success'
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+  session[:successful_submit] = "Submitted #{params['weight']} lbs by #{params['angler']} successfully!"
   redirect back
 end
 
@@ -83,6 +103,27 @@ end
 # remove event submission
 post '/basstracker/submit_remove_event' do
   response = Event.new(params['remove_event']).remove_event
+  puts "response is => #{response}"
+  if response != 'success'
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+  redirect back
+end
+
+# new lake submission
+post '/basstracker/submit_new_lake' do
+  response = Lake.new(params['new_lake']).add_lake
+  if response != 'success'
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+  redirect back
+end
+
+# remove lake submission
+post '/basstracker/submit_remove_lake' do
+  response = Lake.new(params['remove_lake']).remove_lake
   puts "response is => #{response}"
   if response != 'success'
     session[:err_message] = response
