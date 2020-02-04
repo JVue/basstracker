@@ -67,8 +67,16 @@
       </select>
       <br>
       <br>
+      Lake:&nbsp;&nbsp;
+      <select name="lake">
+        <option value="not available" selected>
+        Select Lake (Optional)
+        <%=@lake_list%>
+      </select>
+      <br>
+      <br>
       Weight:&nbsp;&nbsp;
-      <input type="text" name="weight" placeholder="lbs-oz">
+      <input type="text" name="weight" placeholder="lbs-oz or decimal">
       <br>
       <br>
       <%=@bass_type%>
@@ -76,6 +84,8 @@
       <br>
       <input type="submit">
     </form>
+    <br>
+    <font color="green"><%=@submit_message%></font>
     <br>
     <p><a href="http://wagerz.duckdns.org:3000" target="_blank">Track Anglers Statistics Here</a></p>
     <br>
@@ -109,6 +119,23 @@
         <option value="none" selected disabled hidden>
         Select Event
         <%=@event_list_options%>
+      </select>
+      <input type="submit">
+    </form>
+    <br>
+    <br>
+    <form method="POST" action="/basstracker/submit_new_lake">
+      New Lake:&nbsp;
+      <input type="text" name="new_lake" placeholder="lake name">
+      <input type="submit">
+    </form>
+    <br>
+    <form method="POST" action="/basstracker/submit_remove_lake">
+      Remove Lake:&nbsp;&nbsp;
+      <select name="remove_lake">
+        <option value="none" selected disabled hidden>
+        Select Lake
+        <%=@lake_list_options%>
       </select>
       <input type="submit">
     </form>
