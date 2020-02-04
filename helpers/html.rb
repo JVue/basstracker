@@ -70,4 +70,26 @@ class HTML
       HTML
     end
   end
+
+  def lakes
+    list = []
+    @db.get_lakes.each do |lake|
+      list << "<option value=\"#{lake}\">#{lake}</option>"
+    end
+    @db.close_db_connection
+    list.join(',').gsub(',', "\n")
+  end
+
+  def persist_lake(lake_selected)
+    list = []
+    @db.get_lakes.each do |lake|
+      if lake_selected == lake
+        list << "<option value=\"#{lake}\" selected>#{lake}</option>"
+        next
+      end
+      list << "<option value=\"#{lake}\">#{lake}</option>"
+    end
+    @db.close_db_connection
+    list.join(',').gsub(',', "\n")
+  end
 end
