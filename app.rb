@@ -7,6 +7,7 @@ require_relative 'helpers/weight.rb'
 require_relative 'helpers/angler.rb'
 require_relative 'helpers/event.rb'
 require_relative 'helpers/lake.rb'
+require_relative 'helpers/calculator.rb'
 
 # set port and binding
 set :bind, '0.0.0.0'
@@ -129,6 +130,31 @@ post '/basstracker/submit_remove_lake' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+  redirect back
+end
+
+##############
+# calculator #
+##############
+
+# calculator page
+get '/basstracker/calculator' do
+  if session[:total_weight_lbs_oz] && session[:total_weight_decimal]
+    @result = HTML.new.calculator_result(session[:total_weight_lbs_oz], session[:total_weight_decimal])
+    session[:total_weight_lbs_oz], session[:total_weight_decimal] = nil
+  end
+  erb :calc
+end
+
+# calculate weights
+post '/basstracker/calculate_weights' do
+  response = Calculator.new(params['weights']).total_weight
+  if response.class != Hash
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+  session[:total_weight_lbs_oz] = response['total_lbs_oz']
+  session[:total_weight_decimal] = response['total_decimal']
   redirect back
 end
 
