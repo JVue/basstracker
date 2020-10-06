@@ -92,4 +92,16 @@ class HTML
     @db.close_db_connection
     list.join(',').gsub(',', "\n")
   end
+
+  def calculator_result(lbs_oz, decimal)
+    <<~HTML
+    <p align="left">
+      <b>Results:</b>
+      <br>
+      lbs-oz:  #{lbs_oz}
+      <br>
+      decimal: #{decimal}
+    </p>
+    HTML
+  end
 end
