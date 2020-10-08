@@ -8,6 +8,7 @@ require_relative 'helpers/angler.rb'
 require_relative 'helpers/event.rb'
 require_relative 'helpers/lake.rb'
 require_relative 'helpers/calculator.rb'
+require_relative 'helpers/randomizer.rb'
 
 # set port and binding
 set :bind, '0.0.0.0'
@@ -162,6 +163,61 @@ post '/basstracker/calculate_weights' do
   session[:input_weights_in_oz] = response['input_weights_in_oz']
   session[:total_weight_lbs_oz] = response['total_lbs_oz']
   session[:total_weight_decimal] = response['total_decimal']
+  redirect back
+end
+
+##############
+# randomizer #
+##############
+
+# main page
+get '/basstracker/randomizer' do
+  if session[:input_result]
+    @input_result = HTML.new.randomizer_input(session[:input_result])
+    session[:input_result] = nil
+  elsif session[:output_result]
+    @output_result = HTML.new.randomizer_output_no_result(session[:output_result])
+    session[:output_result] = nil
+  elsif session[:list] && session[:count] && session[:sample]
+    @output_result = HTML.new.randomizer_output( \
+      session[:passphrase], \
+      session[:list], \
+      session[:count], \
+      session[:sample] \
+    )
+    session[:passphrase], session[:list], session[:count], session[:sample] = nil
+  end
+
+  erb :randomizer
+end
+
+# randomizer input
+post '/basstracker/randomizer_input' do
+  response = Randomizer.new(params['passphrase'], params['value']).store
+  if response != true
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+  session[:input_result] = "#{params['value']} added to passphrase: #{params['passphrase']} successfully!"
+  redirect back
+end
+
+# randomizer output
+post '/basstracker/randomizer_output' do
+  response = Randomizer.new(params['passphrase']).output
+  # if response.class != Hash
+  #   session[:err_message] = response
+  #   redirect '/basstracker/error'
+  # end
+  if response.is_a?(Hash)
+    session[:passphrase] = params['passphrase']
+    session[:list] = response['list']
+    session[:count] = response['count']
+    session[:sample] = response['sample']
+  elsif response.is_a?(String)
+    session[:output_result] = response
+  end
+
   redirect back
 end
 
