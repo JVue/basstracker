@@ -2,10 +2,10 @@ require 'redis'
 require_relative '../secrets'
 
 class Randomizer
-  def initialize(passphrase = nil, value = nil)
+  def initialize(passphrase = nil, entry = nil)
     @redis = Redis.new(host: '192.168.1.12', port: 6379, password: Secrets.redis_password)
     raise 'Redis connection failed' if @redis.ping != 'PONG'
-    @configs = {'passphrase' => "passphrase_#{passphrase.to_s.downcase.gsub(' ', '')}", 'value' => value.to_s.downcase}
+    @configs = {'passphrase' => "passphrase_#{passphrase.to_s.downcase.gsub(' ', '')}", 'entry' => entry.to_s.downcase}
   end
 
   def close_redis_connection
@@ -13,8 +13,8 @@ class Randomizer
   end
 
   def store
-    response = @redis.lpush(@configs['passphrase'], @configs['value'])
-    raise "Failed to store value: #{@configs['value']} under passphrase: #{@configs['passphrase']}" unless response.is_a?(Integer)
+    response = @redis.lpush(@configs['passphrase'], @configs['entry'])
+    raise "Failed to store entry: #{@configs['entry']} under passphrase: #{passphrase_friendly_name(@configs['passphrase'])}" unless response.is_a?(Integer)
     true
   rescue StandardError => err
     err.message
@@ -40,7 +40,7 @@ class Randomizer
 
   def list
     results = get_list
-    return "No entries found for passphrase: #{passphrase_friendly_name(@configs['passphrase'])}" if results.nil? || results.empty? || results.length.zero?
+    return "No entries found for Passphrase: #{passphrase_friendly_name(@configs['passphrase'])}" if results.nil? || results.empty? || results.length.zero?
     results
   end
 
