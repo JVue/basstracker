@@ -140,8 +140,13 @@ end
 # calculator page
 get '/basstracker/calculator' do
   if session[:total_weight_lbs_oz] && session[:total_weight_decimal]
-    @result = HTML.new.calculator_result(session[:total_weight_lbs_oz], session[:total_weight_decimal])
-    session[:total_weight_lbs_oz], session[:total_weight_decimal] = nil
+    @result = HTML.new.calculator_result( \
+      session[:input_weights], \
+      session[:input_weights_in_oz], \
+      session[:total_weight_lbs_oz], \
+      session[:total_weight_decimal] \
+    )
+    session[:input_weights], session[:input_weights_in_oz], session[:total_weight_lbs_oz], session[:total_weight_decimal] = nil
   end
   erb :calc
 end
@@ -153,6 +158,8 @@ post '/basstracker/calculate_weights' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+  session[:input_weights] = response['input_weights']
+  session[:input_weights_in_oz] = response['input_weights_in_oz']
   session[:total_weight_lbs_oz] = response['total_lbs_oz']
   session[:total_weight_decimal] = response['total_decimal']
   redirect back

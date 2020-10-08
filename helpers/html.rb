@@ -93,10 +93,17 @@ class HTML
     list.join(',').gsub(',', "\n")
   end
 
-  def calculator_result(lbs_oz, decimal)
+  def calculator_result(input_weights, input_weights_in_oz, lbs_oz, decimal)
     <<~HTML
     <p align="left">
-      <b>Results:</b>
+      <b>Submitted weights:</b>
+      <br>
+      Input values:    #{input_weights}
+      <br>
+      Converted to oz: #{input_weights_in_oz}
+      <br>
+      <br>
+      <b>Total:</b>
       <br>
       lbs-oz:  #{lbs_oz}
       <br>
