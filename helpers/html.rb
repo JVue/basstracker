@@ -111,4 +111,37 @@ class HTML
     </p>
     HTML
   end
+
+  def randomizer_input(input_result)
+    <<~HTML
+    <p align="center">
+      #{input_result}
+    </p>
+    HTML
+  end
+
+  def randomizer_output_no_result(output_result)
+    <<~HTML
+    <p align="center">
+      #{output_result}
+    </p>
+    HTML
+  end
+
+  def randomizer_output(passphrase, list, count, sample)
+    value_list = list.to_s.gsub("\"", '').gsub('[', '').gsub(']', '')
+    <<~HTML
+    <p align="center">
+      Random draw: <b><i>#{sample}</i></b>
+      <br>
+      <br>
+      Passphrase: #{passphrase}
+      <br>
+      Entry count: #{count}
+      <br>
+      <br>
+      Values: #{value_list}
+    </p>
+    HTML
+  end
 end
