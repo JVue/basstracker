@@ -200,12 +200,12 @@ end
 
 # randomizer input
 post '/basstracker/randomizer_input' do
-  response = Randomizer.new(params['passphrase'], params['value']).store
+  response = Randomizer.new(params['passphrase'], params['entry']).store
   if response != true
     session[:err_message] = response
     redirect '/basstracker/error'
   end
-  session[:input_result] = "#{params['value']} added to passphrase: #{params['passphrase'].downcase.gsub(' ', '')} successfully!"
+  session[:input_result] = "#{params['entry']} added to Passphrase: #{params['passphrase'].downcase.gsub(' ', '')} successfully!"
   redirect back
 end
 
