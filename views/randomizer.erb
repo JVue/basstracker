@@ -60,13 +60,31 @@
          <hr>
          <h3>Draw From a Passphrase</h3>
          <br>
-         <form method="POST" action="/basstracker/randomizer_output">
+         <form method="POST" action="/basstracker/randomizer_draw">
            <label for="passphrase">Passphrase:</label>
            <input type="text" name="passphrase"><br><br>
            <input type="submit">
          </form>
          <br>
-         <%=@output_result%>
+         <%=@draw_result%>
+         <hr>
+         <h3>Show All Passphrases</h3>
+         <br>
+         <form method="POST" action="/basstracker/randomizer_passphrases">
+           <input type="submit">
+         </form>
+         <br>
+         <%=@passphrase_list%>
+         <hr>
+         <h3>Delete a Passphrase</h3>
+         <br>
+         <form method="POST" action="/basstracker/randomizer_delete">
+           <label for="passphrase">Passphrase:</label>
+           <input type="text" name="passphrase"><br><br>
+           <input type="submit">
+         </form>
+         <br>
+         <%=@delete_result%>
          <hr>
       </div>
       <div class="main">
