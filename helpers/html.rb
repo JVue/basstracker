@@ -120,27 +120,45 @@ class HTML
     HTML
   end
 
-  def randomizer_output_no_result(output_result)
+  def randomizer_passphrases(list)
     <<~HTML
     <p align="center">
-      #{output_result}
+      Existing Passphrases:
+      <br>
+      #{list.to_s.gsub("\"", '').gsub('[', '').gsub(']', '')}
     </p>
     HTML
   end
 
-  def randomizer_output(passphrase, list, count, sample)
+  def randomizer_draw_no_result(draw_result)
+    <<~HTML
+    <p align="center">
+      #{draw_result}
+    </p>
+    HTML
+  end
+
+  def randomizer_draw(passphrase, list, count, sample)
     value_list = list.to_s.gsub("\"", '').gsub('[', '').gsub(']', '')
     <<~HTML
     <p align="center">
-      Random draw: <b><i>#{sample}</i></b>
-      <br>
-      <br>
+      Random draw: <h1><i>#{sample}</i></h1>
       Passphrase: #{passphrase}
       <br>
       Entry count: #{count}
       <br>
       <br>
-      Values: #{value_list}
+      Entries:
+      <br>
+      #{value_list}
+    </p>
+    HTML
+  end
+
+  def randomizer_delete(delete_result)
+    <<~HTML
+    <p align="center">
+      #{delete_result}
     </p>
     HTML
   end
