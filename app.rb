@@ -21,6 +21,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
 
 # presets - load classes
 before do
+  @HTML = HTML.new
 end
 
 ###########
@@ -29,21 +30,21 @@ end
 
 def session_info
   # persist options for existing session
-  @angler_list = HTML.new.persist_angler(session[:angler]) if session[:angler]
-  @event_list = HTML.new.persist_event(session[:event]) if session[:event]
-  @bass_type = HTML.new.persist_bass_type(session[:bass_type]) if session[:bass_type]
-  @lake_list = HTML.new.persist_lake(session[:lake]) if session[:lake]
+  @angler_list = @HTML.persist_angler(session[:angler]) if session[:angler]
+  @event_list = @HTML.persist_event(session[:event]) if session[:event]
+  @bass_type = @HTML.persist_bass_type(session[:bass_type]) if session[:bass_type]
+  @lake_list = @HTML.persist_lake(session[:lake]) if session[:lake]
 
   # new lists if no session found
-  @angler_list = HTML.new.anglers if session[:angler].nil?
-  @event_list = HTML.new.events if session[:event].nil?
-  @bass_type = HTML.new.bass_type if session[:bass_type].nil?
-  @lake_list = HTML.new.lakes if session[:lake].nil?
+  @angler_list = @HTML.anglers if session[:angler].nil?
+  @event_list = @HTML.events if session[:event].nil?
+  @bass_type = @HTML.bass_type if session[:bass_type].nil?
+  @lake_list = @HTML.lakes if session[:lake].nil?
 
   # for angler/event/lake options
-  @angler_list_options = HTML.new.anglers
-  @event_list_options = HTML.new.events
-  @lake_list_options = HTML.new.lakes
+  @angler_list_options = @HTML.anglers
+  @event_list_options = @HTML.events
+  @lake_list_options = @HTML.lakes
 end
 
 #############
@@ -141,7 +142,7 @@ end
 # calculator page
 get '/basstracker/calculator' do
   if session[:total_weight_lbs_oz] && session[:total_weight_decimal]
-    @result = HTML.new.calculator_result( \
+    @result = @HTML.calculator_result( \
       session[:input_weights], \
       session[:input_weights_in_oz], \
       session[:total_weight_lbs_oz], \
@@ -173,19 +174,25 @@ end
 # main page
 get '/basstracker/randomizer' do
   if session[:input_result]
-    @input_result = HTML.new.randomizer_input(session[:input_result])
+    @input_result = @HTML.randomizer_input(session[:input_result])
     session[:input_result] = nil
-  elsif session[:output_result]
-    @output_result = HTML.new.randomizer_output_no_result(session[:output_result])
-    session[:output_result] = nil
+  elsif session[:passphrase_list]
+    @passphrase_list = @HTML.randomizer_passphrases(session[:passphrase_list])
+    session[:passphrase_list] = nil
+  elsif session[:draw_result]
+    @draw_result = @HTML.randomizer_draw_no_result(session[:draw_result])
+    session[:draw_result] = nil
   elsif session[:list] && session[:count] && session[:sample]
-    @output_result = HTML.new.randomizer_output( \
+    @draw_result = @HTML.randomizer_draw( \
       session[:passphrase], \
       session[:list], \
       session[:count], \
       session[:sample] \
     )
     session[:passphrase], session[:list], session[:count], session[:sample] = nil
+  elsif session[:delete_result]
+    @delete_result = @HTML.randomizer_delete(session[:delete_result])
+    session[:delete_result] = nil
   end
 
   erb :randomizer
@@ -198,13 +205,26 @@ post '/basstracker/randomizer_input' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
-  session[:input_result] = "#{params['value']} added to passphrase: #{params['passphrase']} successfully!"
+  session[:input_result] = "#{params['value']} added to passphrase: #{params['passphrase'].downcase.gsub(' ', '')} successfully!"
   redirect back
 end
 
-# randomizer output
-post '/basstracker/randomizer_output' do
-  response = Randomizer.new(params['passphrase']).output
+# randomizer show passphrases
+post '/basstracker/randomizer_passphrases' do
+  response = Randomizer.new.passphrase_list
+  unless response.is_a?(Array)
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+
+  session[:passphrase_list] = response
+
+  redirect back
+end
+
+# randomizer draw
+post '/basstracker/randomizer_draw' do
+  response = Randomizer.new(params['passphrase']).draw
   # if response.class != Hash
   #   session[:err_message] = response
   #   redirect '/basstracker/error'
@@ -215,8 +235,21 @@ post '/basstracker/randomizer_output' do
     session[:count] = response['count']
     session[:sample] = response['sample']
   elsif response.is_a?(String)
-    session[:output_result] = response
+    session[:draw_result] = response
   end
+
+  redirect back
+end
+
+# randomizer delete
+post '/basstracker/randomizer_delete' do
+  response = Randomizer.new(params['passphrase']).delete
+  unless response.include?('successfully') || response.include?('not found')
+    session[:err_message] = response
+    redirect '/basstracker/error'
+  end
+
+  session[:delete_result] = response
 
   redirect back
 end
