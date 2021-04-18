@@ -1,13 +1,14 @@
 require_relative 'db'
 
 class Weight
-  def initialize(angler, event, weight, bass_type, lake = nil)
+  def initialize(angler, event, weight, bass_type, state, lake = nil)
     @db = DB.new
     @datetime = Time.now.strftime("%m/%d/%Y,%I:%M %p").split(',')
     @angler_name = angler
     @event = event
     @weight = weight
     @bass_type = bass_type
+    @state = state
     @lake = lake
   end
 
@@ -17,6 +18,7 @@ class Weight
     validate_event
     validate_weight
     validate_bass_type
+    validate_state
     validate_lake
 
     # add angler entry
@@ -60,6 +62,10 @@ class Weight
     raise "Error: Bass species (largemouth/smallmouth) not selected. Please select a species and try again." if @bass_type.nil? || @bass_type.empty?
     raise "Error: Bass species type is invalid." unless @bass_type.include?('largemouth') || @bass_type.include?('smallmouth')
     true
+  end
+
+  def validate_state
+    raise 'ERROR: State field is invalid or missing.' if @state.nil? || @state.empty?
   end
 
   def validate_lake
