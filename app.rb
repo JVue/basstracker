@@ -32,19 +32,21 @@ def session_info
   # persist options for existing session
   @angler_list = @HTML.persist_angler(session[:angler]) if session[:angler]
   @event_list = @HTML.persist_event(session[:event]) if session[:event]
+  @state_list = @HTML.persist_event(session[:state]) if session[:state]
   @bass_type = @HTML.persist_bass_type(session[:bass_type]) if session[:bass_type]
   @lake_list = @HTML.persist_lake(session[:lake]) if session[:lake]
 
   # new lists if no session found
-  @angler_list = @HTML.anglers if session[:angler].nil?
-  @event_list = @HTML.events if session[:event].nil?
+  @angler_list = @HTML.angler_list if session[:angler].nil?
+  @event_list = @HTML.event_list if session[:event].nil?
+  @state_list = @HTML.state_list if session[:state].nil?
   @bass_type = @HTML.bass_type if session[:bass_type].nil?
-  @lake_list = @HTML.lakes if session[:lake].nil?
+  @lake_list = @HTML.lake_list if session[:lake].nil?
 
   # for angler/event/lake options
-  @angler_list_options = @HTML.anglers
-  @event_list_options = @HTML.events
-  @lake_list_options = @HTML.lakes
+  @angler_list_options = @HTML.angler_list
+  @event_list_options = @HTML.event_list
+  @lake_list_options = @HTML.lake_list
 end
 
 #############
@@ -58,13 +60,23 @@ get '/basstracker/submit' do
   erb :main
 end
 
+# options
+get '/basstracker/options' do
+  session_info
+  erb :options
+end
+
 # weight submission
 post '/basstracker/submit_weight' do
+  # set session vars
   session[:angler] = params['angler']
   session[:event] = params['event']
+  session[:state] = params['state']
   session[:bass_type] = params['bass_type']
   session[:lake] = params['lake']
-  response = Weight.new(params['angler'], params['event'], params['weight'], params['bass_type'], params['lake']).submit
+
+  # submit weight
+  response = Weight.new(params['angler'], params['event'], params['weight'], params['bass_type'], params['state'], params['lake']).submit
   if response != 'success'
     session[:err_message] = response
     redirect '/basstracker/error'
