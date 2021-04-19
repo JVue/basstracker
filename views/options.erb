@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+         * {
+         box-sizing: border-box;
+         }
+         .menu {
+         float:left;
+         width:40%;
+         text-align:center;
+         }
+         .menu select {
+           width: 50%;
+           clear: both;
+         }
+         .menu input {
+           clear: both;
+         }
+         .menu a {
+         background-color:#FFFFFF;
+         padding:8px;
+         margin-top:7px;
+         display:block;
+         width:100%;
+         color:blue;
+         }
+         .main {
+         float:left;
+         width:60%;
+         padding:0 20px;
+         }
+         .right {
+         background-color:#FFFFFF;
+         float:left;
+         width:20%;
+         padding:15px;
+         margin-top:7px;
+         text-align:center;
+         }
+         @media only screen and (max-width:620px) {
+         /* For mobile phones: */
+         .menu, .main, .right {
+         width:100%;
+         }
+         }
+      </style>
+   </head>
+   <body style="font-family:serif;color:#000000;">
+      <div style="background-color:#FFFFFF;padding:15px;text-align:center;">
+         <h1>Basstracker</h1>
+      </div>
+      <br>
+      <div style="overflow:auto">
+      <div class="menu">
+         <h3>Angler/Event Options:</h3>
+         <form method="POST" action="/basstracker/submit_new_angler">
+            New Angler:&nbsp;&nbsp;
+            <input type="text" name="new_angler" placeholder="firstname.lastname">
+            <input type="submit">
+         </form>
+         <br>
+         <form method="POST" action="/basstracker/submit_remove_angler">
+            Remove Angler:
+            <select name="remove_angler">
+               <option value="none" selected disabled hidden>
+                  Select Angler
+                  <%=@angler_list_options%>
+            </select>
+            <input type="submit">
+         </form>
+         <br>
+         <br>
+         <br>
+         <form method="POST" action="/basstracker/submit_new_event">
+            New Event:
+            <input type="text" name="new_event" placeholder="event name">
+            <input type="submit">
+         </form>
+         <br>
+         <form method="POST" action="/basstracker/submit_remove_event">
+            Remove Event:&nbsp;&nbsp;
+            <select name="remove_event">
+               <option value="none" selected disabled hidden>
+                  Select Event
+                  <%=@event_list_options%>
+            </select>
+            <input type="submit">
+         </form>
+         <br>
+         <br>
+         <br>
+         <form method="POST" action="/basstracker/submit_new_lake">
+            New Lake:&nbsp;
+            <input type="text" name="new_lake" placeholder="lake name">
+            <input type="submit">
+         </form>
+         <br>
+         <form method="POST" action="/basstracker/submit_remove_lake">
+            Remove Lake:&nbsp;&nbsp;
+            <select name="remove_lake">
+               <option value="none" selected disabled hidden>
+                  Select Lake
+                  <%=@lake_list_options%>
+            </select>
+            <input type="submit">
+         </form>
+         <br>
+         <p><a href="http://jasonvue.club:8081/basstracker/submit">Back to weight submission page</a></p>
+         <br>
+      </div>
+      <div class="main">
+      </div>
+      <div class="center"></div>
+   </body>
+</html>
