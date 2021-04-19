@@ -32,7 +32,7 @@ def session_info
   # persist options for existing session
   @angler_list = @HTML.persist_angler(session[:angler]) if session[:angler]
   @event_list = @HTML.persist_event(session[:event]) if session[:event]
-  @state_list = @HTML.persist_event(session[:state]) if session[:state]
+  @state_list = @HTML.persist_state(session[:state]) if session[:state]
   @bass_type = @HTML.persist_bass_type(session[:bass_type]) if session[:bass_type]
   @lake_list = @HTML.persist_lake(session[:lake]) if session[:lake]
 
