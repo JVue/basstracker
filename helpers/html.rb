@@ -6,6 +6,7 @@ class HTML
     @anglers = anglers
     @events = events
     @lakes = lakes
+    @states = states
   end
 
   def anglers
@@ -187,6 +188,19 @@ class HTML
   def state_list
     list = []
     states.each do |state|
+      list << "<option value=\"#{state}\">#{state}</option>"
+    end
+
+    list.join(',').gsub(',', "\n")
+  end
+
+  def persist_state(state_selected)
+    list = []
+    @states.each do |state|
+      if state_selected == state
+        list << "<option value=\"#{state}\" selected>#{state}</option>"
+        next
+      end
       list << "<option value=\"#{state}\">#{state}</option>"
     end
 
