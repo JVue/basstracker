@@ -208,64 +208,57 @@ class HTML
   end
 
   def states
-    %w[
-      alabama
-      alaska
-      american samoa
-      arizona
-      arkansas
-      california
-      colorado
-      connecticut
-      delaware
-      district of columbia
-      florida
-      georgia
-      guam
-      hawaii
-      idaho
-      illinois
-      indiana
-      iowa
-      kansas
-      kentucky
-      louisiana
-      maine
-      maryland
-      massachusetts
-      michigan
-      minnesota
-      minor outlying islands
-      mississippi
-      missouri
-      montana
-      nebraska
-      nevada
-      new hampshire
-      new jersey
-      new mexico
-      new york
-      north carolina
-      north dakota
-      northern mariana islands
-      ohio
-      oklahoma
-      oregon
-      pennsylvania
-      puerto rico
-      rhode island
-      south carolina
-      south dakota
-      tennessee
-      texas
-      u.s. virgin islands
-      utah
-      vermont
-      virginia
-      washington
-      west virginia
-      wisconsin
-      wyoming
+    [
+      'Alabama',
+      'Alaska',
+      'Arizona',
+      'Arkansas',
+      'California',
+      'Colorado',
+      'Connecticut',
+      'Delaware',
+      'Florida',
+      'Georgia',
+      'Hawaii',
+      'Idaho',
+      'Illinois',
+      'Indiana',
+      'Iowa',
+      'Kansas',
+      'Kentucky',
+      'Louisiana',
+      'Maine',
+      'Maryland',
+      'Massachusetts',
+      'Michigan',
+      'Minnesota',
+      'Mississippi',
+      'Missouri',
+      'Montana',
+      'Nebraska',
+      'Nevada',
+      'New Hampshire',
+      'New Jersey',
+      'New Mexico',
+      'New York',
+      'North Carolina',
+      'North Dakota',
+      'Ohio',
+      'Oklahoma',
+      'Oregon',
+      'Pennsylvania',
+      'Rhode Island',
+      'South Carolina',
+      'South Dakota',
+      'Tennessee',
+      'Texas',
+      'Utah',
+      'Vermont',
+      'Virginia',
+      'Washington',
+      'West Virginia',
+      'Wisconsin',
+      'Wyoming'
     ]
   end
 end
