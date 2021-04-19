@@ -1,5 +1,10 @@
 require_relative 'db'
 
+# db reference:
+# table name: basstracker
+# field: lake
+
+# class to submit catch details to db
 class Weight
   def initialize(angler, event, weight, bass_type, state, lake = nil)
     @db = DB.new
@@ -66,6 +71,8 @@ class Weight
 
   def validate_state
     raise 'ERROR: State field is invalid or missing.' if @state.nil? || @state.empty?
+
+    true
   end
 
   def validate_lake
@@ -88,14 +95,16 @@ class Weight
   end
 
   def submit_angler_entry
-    response = @db.add_entry(@datetime[0], @datetime[1], @angler_name, @event, @weight, decimal, ounces, @bass_type, @lake)
+    response = @db.add_weight_entry(@datetime[0], @datetime[1], @angler_name, @event, @weight, decimal, ounces, @bass_type, @state, @lake)
     raise 'ERROR: Submission failed.' if response == false
+
     true
   end
 
   def verify_submission
-    response = @db.get_entry(@datetime[0], @datetime[1], @angler_name, @event, @weight, @bass_type, @lake)
+    response = @db.get_weight_entry(@datetime[0], @datetime[1], @angler_name, @event, @weight, @bass_type, @state, @lake)
     raise 'ERROR: Submission validation failed.' if response == false
+
     true
   end
 end
