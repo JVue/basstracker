@@ -194,14 +194,15 @@ get '/basstracker/randomizer' do
   elsif session[:draw_result]
     @draw_result = @HTML.randomizer_draw_no_result(session[:draw_result])
     session[:draw_result] = nil
-  elsif session[:list] && session[:count] && session[:sample]
+  elsif session[:sample] && session[:old_count] && session[:new_count] && session[:number_of_sample_removed]
     @draw_result = @HTML.randomizer_draw( \
       session[:passphrase], \
-      session[:list], \
-      session[:count], \
-      session[:sample] \
+      session[:sample], \
+      session[:old_count], \
+      session[:new_count], \
+      session[:number_of_sample_removed]
     )
-    session[:passphrase], session[:list], session[:count], session[:sample] = nil
+    session[:passphrase], session[:count], session[:sample] = nil
   elsif session[:delete_result]
     @delete_result = @HTML.randomizer_delete(session[:delete_result])
     session[:delete_result] = nil
@@ -237,15 +238,13 @@ end
 # randomizer draw
 post '/basstracker/randomizer_draw' do
   response = Randomizer.new(params['passphrase']).draw
-  # if response.class != Hash
-  #   session[:err_message] = response
-  #   redirect '/basstracker/error'
-  # end
+
   if response.is_a?(Hash)
     session[:passphrase] = params['passphrase']
-    session[:list] = response['list']
-    session[:count] = response['count']
     session[:sample] = response['sample']
+    session[:old_count] = response['old_count']
+    session[:new_count] = response['new_count']
+    session[:number_of_sample_removed] = response['number_of_sample_removed']
   elsif response.is_a?(String)
     session[:draw_result] = response
   end

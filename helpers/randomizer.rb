@@ -44,13 +44,29 @@ class Randomizer
     results
   end
 
+  def select_sample(array)
+    array.sample
+  end
+
+  def remove_item(item)
+    @redis.lrem(@configs['passphrase'], ('-' + @redis.llen(@configs['passphrase']).to_s).to_i, item)
+  end
+
   def draw
     passphrase_list = list
     return passphrase_list if passphrase_list.is_a?(String)
+
+    sample = select_sample(passphrase_list.shuffle) # select random element from array
+    remove_item(sample) # remove the element from redis list
+    old_count = passphrase_list.length
+    new_count = list.is_a?(String) ? 0 : list.length
+    number_of_sample_removed = old_count - new_count
+
     {
-        'list'   => passphrase_list.sort,
-        'count'  => passphrase_list.length,
-        'sample' => passphrase_list.sample
+      'sample' => sample,
+      'old_count'  => old_count,
+      'new_count' => new_count,
+      'number_of_sample_removed' => number_of_sample_removed
     }
   end
 
