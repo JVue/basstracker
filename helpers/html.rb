@@ -160,19 +160,19 @@ class HTML
     HTML
   end
 
-  def randomizer_draw(passphrase, list, count, sample)
-    value_list = list.to_s.gsub("\"", '').gsub('[', '').gsub(']', '')
+  def randomizer_draw(passphrase, sample, old_count, new_count, number_of_sample_removed)
     <<~HTML
     <p align="center">
-      Random draw: <h1><i>#{sample}</i></h1>
+      Random draw result: <h1><i>#{sample}</i></h1>
+      <br>
       Passphrase: #{passphrase}
       <br>
-      Entry count: #{count}
+      Previous entry count: #{old_count}
       <br>
+      New entry count: #{new_count}
       <br>
-      Entries:
+      Entries removed with the name #{sample}: #{number_of_sample_removed}
       <br>
-      #{value_list}
     </p>
     HTML
   end
