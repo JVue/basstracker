@@ -74,6 +74,10 @@
          <br>
          <br>
          <br>
+         <font color="green"><%=@submit_angler_option_message%></font>
+         <br>
+         <br>
+         <br>
          <form method="POST" action="/basstracker/submit_new_event">
             New Event:
             <input type="text" name="new_event" placeholder="event name">
@@ -92,6 +96,10 @@
          <br>
          <br>
          <br>
+         <font color="green"><%=@submit_event_option_message%></font>
+         <br>
+         <br>
+         <br>
          <form method="POST" action="/basstracker/submit_new_lake">
             New Lake:&nbsp;
             <input type="text" name="new_lake" placeholder="lake name">
@@ -107,6 +115,12 @@
             </select>
             <input type="submit">
          </form>
+         <br>
+         <br>
+         <br>
+         <font color="green"><%=@submit_lake_option_message%></font>
+         <br>
+         <br>
          <br>
          <p><a href="http://jasonvue.club:8081/basstracker/submit">Back to weight submission page</a></p>
          <br>
