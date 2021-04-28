@@ -15,14 +15,17 @@ class Lake
   def add_lake
     validate_name
     insert_new_lake
+    @db.close_db_connection
     'success'
   rescue StandardError => err
     err.message
   end
 
   def remove_lake
-    lake_exists?
+    raise "Error: Lake field is blank/empty or lake #{@lake} does not exists." unless lake_exists?
+
     delete_lake
+    @db.close_db_connection
     'success'
   rescue StandardError => err
     err.message
@@ -38,24 +41,18 @@ class Lake
   end
 
   def lake_exists?
-    raise "Error: Lake field is blank/empty or lake #{@lake} does not exists." unless @lakes.include?(@lake)
-
-    true
+    @lakes.include?(@lake)
   end
 
   def lakes
-    list = @db.get_db_field_values('basstracker_lakes', 'lake')
-    @db.close_db_connection
-    list
+    @db.get_db_field_values('basstracker_lakes', 'lake')
   end
 
   def insert_new_lake
     @db.add_db_value('basstracker_lakes', 'lake', @lake)
-    @db.close_db_connection
   end
 
   def delete_lake
     @db.delete_db_value('basstracker_lakes', 'lake', @lake)
-    @db.close_db_connection
   end
 end

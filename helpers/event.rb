@@ -15,14 +15,17 @@ class Event
   def add_event
     validate_name
     insert_new_event(@event)
+    @db.close_db_connection
     'success'
-  rescue StandardError => err
-    err.message
+  # rescue StandardError => err
+  #   err.message
   end
 
   def remove_event
-    event_exists?
+    raise "Error: Event field is blank/empty or event #{@event} does not exists." unless event_exists?
+
     delete_event(@event)
+    @db.close_db_connection
     'success'
   rescue StandardError => err
     err.message
@@ -38,24 +41,18 @@ class Event
   end
 
   def event_exists?
-    raise "Error: Event field is blank/empty or event #{@event} does not exists." unless @events.include?(@event)
-
-    true
+    @events.include?(@event)
   end
 
   def events
-    list = @db.get_db_field_values('basstracker_events', 'event')
-    @db.close_db_connection
-    list
+    @db.get_db_field_values('basstracker_events', 'event')
   end
 
   def insert_new_event(event)
     @db.add_db_value('basstracker_events', 'event', event)
-    @db.close_db_connection
   end
 
   def delete_event(event)
     @db.delete_db_value('basstracker_events', 'event', event)
-    @db.close_db_connection
   end
 end
