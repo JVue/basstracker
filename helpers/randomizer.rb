@@ -5,6 +5,7 @@ class Randomizer
   def initialize(passphrase = nil, entry = nil)
     @redis = Redis.new(host: '192.168.1.12', port: 6379, password: Secrets.redis_password)
     raise 'Redis connection failed' if @redis.ping != 'PONG'
+
     @configs = {'passphrase' => "passphrase_#{passphrase.to_s.downcase.gsub(' ', '')}", 'entry' => entry.to_s.downcase}
   end
 
