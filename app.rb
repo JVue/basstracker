@@ -28,7 +28,7 @@ end
 # methods #
 ###########
 
-def session_info
+def submit_session_info
   # persist options for existing session
   @angler_list = @HTML.persist_angler(session[:angler]) if session[:angler]
   @event_list = @HTML.persist_event(session[:event]) if session[:event]
@@ -42,7 +42,9 @@ def session_info
   @state_list = @HTML.state_list if session[:state].nil?
   @bass_type = @HTML.bass_type if session[:bass_type].nil?
   @lake_list = @HTML.lake_list if session[:lake].nil?
+end
 
+def options_session_info
   # for angler/event/lake options
   @angler_list_options = @HTML.angler_list
   @event_list_options = @HTML.event_list
@@ -62,7 +64,13 @@ end
 
 # options
 get '/basstracker/options' do
-  session_info
+  options_session_info
+  @submit_angler_option_message = session[:angler_option_successful_submit]
+  #@submit_remove_angler_message = session[:remove_angler_successful_submit]
+  @submit_event_option_message = session[:event_option_successful_submit]
+  #@submit_remove_event_message = session[:remove_event_successful_submit]
+  @submit_lake_option_message = session[:lake_option_successful_submit]
+  #@submit_remove_lake_message = session[:remove_lake_successful_submit]
   erb :options
 end
 
@@ -81,6 +89,7 @@ post '/basstracker/submit_weight' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
   session[:successful_submit] = "Submitted #{params['weight']} lbs by #{params['angler']} successfully!"
   redirect back
 end
@@ -92,6 +101,8 @@ post '/basstracker/submit_new_angler' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:angler_option_successful_submit] = "Added #{params['new_angler']} successfully!"
   redirect back
 end
 
@@ -102,6 +113,8 @@ post '/basstracker/submit_remove_angler' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:angler_option_successful_submit] = "Removed #{params['remove_angler']} successfully!"
   redirect back
 end
 
@@ -112,6 +125,8 @@ post '/basstracker/submit_new_event' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:event_option_successful_submit] = "Added #{params['new_event']} successfully!"
   redirect back
 end
 
@@ -123,6 +138,8 @@ post '/basstracker/submit_remove_event' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:event_option_successful_submit] = "Removed #{params['remove_event']} successfully!"
   redirect back
 end
 
@@ -133,6 +150,8 @@ post '/basstracker/submit_new_lake' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:lake_option_successful_submit] = "Added #{params['new_lake']} successfully!"
   redirect back
 end
 
@@ -144,6 +163,8 @@ post '/basstracker/submit_remove_lake' do
     session[:err_message] = response
     redirect '/basstracker/error'
   end
+
+  session[:lake_option_successful_submit] = "Removed #{params['remove_lake']} successfully!"
   redirect back
 end
 
