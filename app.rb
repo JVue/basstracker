@@ -57,7 +57,7 @@ end
 
 # main page for submission
 get '/basstracker/submit' do
-  session_info
+  submit_session_info
   @submit_message = session[:successful_submit]
   erb :main
 end
