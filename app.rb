@@ -19,6 +19,9 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
                            :secret => Secrets.session_secret
 
+# set host authorization
+set :host_authorization, { permitted_hosts: [] } # this disables host auth for all environments.
+
 # presets - load classes
 before do
   @HTML = HTML.new
