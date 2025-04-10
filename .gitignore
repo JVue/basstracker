@@ -1,2 +1,5 @@
 env*
 secret*
+cloudflare_origin_server.key
+cloudflare_origin_server.pem
+pat
