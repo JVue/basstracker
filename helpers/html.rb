@@ -188,7 +188,11 @@ class HTML
   def state_list
     list = []
     states.each do |state|
-      list << "<option value=\"#{state}\">#{state}</option>"
+      if state == 'Minnesota'
+        list << "<option value=\"#{state}\" selected>#{state}</option>"
+      else
+        list << "<option value=\"#{state}\">#{state}</option>"
+      end
     end
 
     list.join(',').gsub(',', "\n")

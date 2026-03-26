@@ -3,116 +3,439 @@
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-         * {
-         box-sizing: border-box;
-         }
-         .menu {
-         float:left;
-         width:30%;
-         text-align:center;
-         font-size: large;
-         }
-         .menu select {
-           width: 50%;
-           clear: both;
-         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-         .menu a {
-         background-color:#FFFFFF;
-         padding:8px;
-         margin-top:7px;
-         display:block;
-         width:100%;
-         color:blue;
-         }
-         .main {
-         float:left;
-         width:60%;
-         padding:0 20px;
-         }
-         .right {
-         background-color:#FFFFFF;
-         float:left;
-         width:20%;
-         padding:15px;
-         margin-top:7px;
-         text-align:center;
-         }
-         @media only screen and (max-width:620px) {
-         /* For mobile phones: */
-         .menu, .main, .right {
-         width:100%;
-         }
-         }
+        body {
+          font-family: monospace;
+          background-color: #e8f4f8;
+          color: #1a1a1a;
+          min-height: 100vh;
+        }
+
+        header {
+          background: linear-gradient(135deg, #0077b6, #0096c7);
+          text-align: center;
+          padding: 24px 16px;
+          border-bottom: 3px solid #ffffff;
+        }
+
+        header h1 {
+          font-size: 2.4rem;
+          letter-spacing: 4px;
+          color: #ffffff;
+          text-transform: uppercase;
+          text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+          color: #caf0f8;
+          font-size: 0.85rem;
+          margin-top: 4px;
+          letter-spacing: 2px;
+        }
+
+        .page {
+          display: flex;
+          justify-content: center;
+          padding: 32px 16px;
+        }
+
+        .card {
+          background: #ffffff;
+          border: 1px solid #b8d8e8;
+          border-radius: 12px;
+          padding: 32px 28px;
+          width: 100%;
+          max-width: 420px;
+          box-shadow: 0 4px 16px rgba(0,119,182,0.1);
+        }
+
+        .card h2 {
+          text-align: center;
+          font-size: 1.1rem;
+          letter-spacing: 2px;
+          color: #0077b6;
+          margin-bottom: 28px;
+          text-transform: uppercase;
+          border-bottom: 2px solid #e8f4f8;
+          padding-bottom: 12px;
+        }
+
+        .field {
+          margin-bottom: 18px;
+        }
+
+        .field label {
+          display: block;
+          font-size: 0.8rem;
+          letter-spacing: 1px;
+          color: #0077b6;
+          text-transform: uppercase;
+          font-weight: bold;
+          margin-bottom: 6px;
+        }
+
+        .field select,
+        .field input[type="text"] {
+          width: 100%;
+          padding: 10px 12px;
+          background: #f0f8ff;
+          border: 1.5px solid #90caf9;
+          border-radius: 6px;
+          color: #1a1a1a;
+          font-family: monospace;
+          font-size: 1rem;
+          appearance: none;
+          -webkit-appearance: none;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field select:focus,
+        .field input[type="text"]:focus {
+          border-color: #0077b6;
+          box-shadow: 0 0 0 3px rgba(0,119,182,0.15);
+        }
+
+        .field input[type="text"] {
+          padding: 14px 12px;
+          font-size: 1.1rem;
+        }
+
+        .field .error {
+          display: none;
+          color: #d62828;
+          font-size: 0.78rem;
+          margin-top: 4px;
+        }
+
+        .bass-group {
+          display: flex;
+          gap: 16px;
+          margin-top: 4px;
+        }
+
+        .bass-group label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          color: #1a1a1a;
+          text-transform: none;
+          letter-spacing: 0;
+          font-weight: normal;
+        }
+
+        .bass-group input[type="radio"] {
+          accent-color: #0077b6;
+          width: 16px;
+          height: 16px;
+        }
+
+        .submit-btn {
+          width: 100%;
+          padding: 14px;
+          margin-top: 8px;
+          background: linear-gradient(135deg, #0096c7, #0077b6);
+          border: none;
+          border-radius: 6px;
+          color: #fff;
+          font-family: monospace;
+          font-size: 1rem;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: opacity 0.2s, box-shadow 0.2s;
+          box-shadow: 0 2px 8px rgba(0,119,182,0.3);
+        }
+
+        .submit-btn:hover {
+          opacity: 0.9;
+          box-shadow: 0 4px 12px rgba(0,119,182,0.4);
+        }
+
+        .success-msg {
+          text-align: center;
+          color: #2d6a4f;
+          font-size: 0.9rem;
+          margin-top: 14px;
+          min-height: 1.2em;
+          font-weight: bold;
+        }
+
+        .links {
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+          border-top: 2px solid #e8f4f8;
+          padding-top: 20px;
+        }
+
+        .links a {
+          color: #0077b6;
+          text-decoration: none;
+          font-size: 0.85rem;
+          letter-spacing: 1px;
+          transition: color 0.2s;
+        }
+
+        .links a:hover { color: #0096c7; text-decoration: underline; }
+
+        .keypad-overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 99;
+        }
+
+        .keypad-overlay.open { display: block; }
+
+        .keypad {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 6px;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 100;
+          background: #f0f8ff;
+          border-top: 2px solid #90caf9;
+          padding: 10px;
+          transform: translateY(100%);
+          transition: transform 0.2s ease;
+          user-select: none;
+        }
+
+        .keypad.open { transform: translateY(0); }
+
+        .keypad button {
+          padding: 16px 0;
+          font-family: monospace;
+          font-size: 1.3rem;
+          font-weight: bold;
+          background: #ffffff;
+          border: 1.5px solid #90caf9;
+          border-radius: 6px;
+          color: #0077b6;
+          cursor: pointer;
+          transition: background 0.15s;
+        }
+
+        .keypad button:active { background: #caf0f8; }
+
+        .keypad button.key-del {
+          background: #ffe0e0;
+          border-color: #f4a0a0;
+          color: #d62828;
+        }
+
+        .keypad button.key-del:active { background: #f4a0a0; }
+
+        .keypad button.key-done {
+          grid-column: span 4;
+          background: linear-gradient(135deg, #0096c7, #0077b6);
+          color: #fff;
+          border-color: #0077b6;
+          font-size: 1rem;
+          letter-spacing: 2px;
+        }
+
+        .keypad button.key-done:active { opacity: 0.85; }
+
+        @media (max-width: 480px) {
+          .card { padding: 24px 16px; }
+          header h1 { font-size: 1.8rem; }
+        }
       </style>
    </head>
-   <body style="font-family:monospace;color:#000000;">
-      <div style="background-color:#FFFFFF;padding:15px;text-align:center;font-size:200%;">
-         <h1>Basstracker</h1>
+   <body>
+      <header>
+        <h1>Basstracker</h1>
+        <p>Weight Submission</p>
+      </header>
+
+      <div class="page">
+        <div class="card">
+          <h2>Log a Catch</h2>
+
+          <form method="POST" action="/basstracker/submit_weight">
+
+            <div class="field">
+              <label for="angler">Angler</label>
+              <select id="angler" name="angler">
+                <option value="none" selected disabled hidden>Select Angler (Required)</option>
+                <%=@angler_list%>
+              </select>
+              <span class="error" id="angler-error">Please select an angler.</span>
+            </div>
+
+            <div class="field">
+              <label for="event">Event</label>
+              <select id="event" name="event">
+                <option value="none" selected disabled hidden>Select Event (Required)</option>
+                <%=@event_list%>
+              </select>
+              <span class="error" id="event-error">Please select an event.</span>
+            </div>
+
+            <div class="field">
+              <label for="state">State</label>
+              <select id="state" name="state">
+                <%=@state_list%>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="lake">Lake <span style="color:#555;font-size:0.75rem;">(optional)</span></label>
+              <select name="lake">
+                <option value="not available" selected>Select Lake (Optional)</option>
+                <%=@lake_list%>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Species</label>
+              <div class="bass-group">
+                <%=@bass_type%>
+              </div>
+              <span class="error" id="bass-error">Please select largemouth or smallmouth.</span>
+            </div>
+
+            <div class="field">
+              <label for="weight">Weight</label>
+              <input type="text" id="weight" name="weight" placeholder="lbs-oz or decimal" readonly>
+              <span class="error" id="weight-error">Invalid format. Use lbs-oz (e.g. 2-14) or decimal (e.g. 2.87).</span>
+            </div>
+
+            <input type="submit" class="submit-btn" value="Submit Catch">
+          </form>
+
+          <div class="success-msg"><%=@submit_message%></div>
+
+          <div class="links">
+            <a href="http://<%=request.host_with_port%>/basstracker/options">Angler / Event / Lake Options</a>
+            <a href="http://daily.jasonvue.club" target="_blank">View Daily Results Dashboard</a>
+            <a href="http://versus.jasonvue.club" target="_blank">View Versus Results Dashboard</a>
+          </div>
+        </div>
       </div>
-      <br>
-      <div style="overflow:auto">
-      <div class="menu">
-         <h2>Weight Submission:</h2>
-         <br>
-         <form method="POST" action="/basstracker/submit_weight">
-            Angler:
-            <select name="angler">
-               <option value="none" selected disabled hidden>
-                  Select Angler (Required)
-                  <%=@angler_list%>
-            </select>
-            <br>
-            <br>
-            <br>
-            Event:
-            <select name="event">
-               <option value="none" selected disabled hidden>
-                  Select Event (Required)
-                  <%=@event_list%>
-            </select>
-            <br>
-            <br>
-            <br>
-            State:
-            <select name="state">
-               <option value="none" selected disabled hidden>
-                  Select State (Required)
-                  <%=@state_list%>
-            </select>
-            <br>
-            <br>
-            <br>
-            Lake:
-            <select name="lake">
-               <option value="not available" selected>
-                  Select Lake (Optional)
-                  <%=@lake_list%>
-            </select>
-            <br>
-            <br>
-            <br>
-            Weight:&nbsp;&nbsp;&nbsp;
-            <input type="text" name="weight" placeholder="lbs-oz or decimal">
-            <br>
-            <br>
-            <br>
-            <%=@bass_type%>
-            <br>
-            <br>
-            <br>
-            <input type="submit">
-         </form>
-         <br>
-         <font color="green"><%=@submit_message%></font>
-         <br>
-         <p><a href="http://jasonvue.club:8081/basstracker/options">Angler/Event/Lake options</a></p>
-         <p><a href="http://daily.jasonvue.club" target="_blank">View daily results dashboard</a></p>
-         <p><a href="http://versus.jasonvue.club" target="_blank">View versus results dashboard</a></p>
-         <br>
+
+      <div class="keypad-overlay" id="keypad-overlay"></div>
+      <div class="keypad" id="keypad">
+        <button type="button" onclick="kp('7')">7</button>
+        <button type="button" onclick="kp('8')">8</button>
+        <button type="button" onclick="kp('9')">9</button>
+        <button type="button" class="key-del" onclick="kpDel()">⌫</button>
+        <button type="button" onclick="kp('4')">4</button>
+        <button type="button" onclick="kp('5')">5</button>
+        <button type="button" onclick="kp('6')">6</button>
+        <button type="button" style="visibility:hidden"></button>
+        <button type="button" onclick="kp('1')">1</button>
+        <button type="button" onclick="kp('2')">2</button>
+        <button type="button" onclick="kp('3')">3</button>
+        <button type="button" style="visibility:hidden"></button>
+        <button type="button" onclick="kp('.')">.</button>
+        <button type="button" onclick="kp('0')">0</button>
+        <button type="button" onclick="kp('-')">-</button>
+        <button type="button" style="visibility:hidden"></button>
+        <button type="button" class="key-done" onclick="kpDone()">DONE</button>
       </div>
-      <div class="main">
-      </div>
-      <div class="center"></div>
+
+      <script>
+        var weightInput = document.getElementById('weight');
+        var keypad = document.getElementById('keypad');
+        var overlay = document.getElementById('keypad-overlay');
+        var isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+        if (isTouchDevice) {
+          weightInput.addEventListener('click', kpOpen);
+          overlay.addEventListener('click', kpClose);
+        } else {
+          weightInput.removeAttribute('readonly');
+        }
+
+        function kpOpen() {
+          keypad.classList.add('open');
+          overlay.classList.add('open');
+          // Wait for the slide-up animation (200ms) to finish before measuring
+          setTimeout(function() {
+            var keypadHeight = keypad.offsetHeight;
+            // Add padding so the page can scroll far enough
+            document.body.style.paddingBottom = keypadHeight + 'px';
+            var rect = weightInput.getBoundingClientRect();
+            var inputBottom = rect.bottom;
+            var visibleBottom = window.innerHeight - keypadHeight - 16;
+            if (inputBottom > visibleBottom) {
+              window.scrollBy({ top: inputBottom - visibleBottom, behavior: 'smooth' });
+            }
+          }, 220);
+        }
+
+        function kpClose() {
+          keypad.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.paddingBottom = '';
+        }
+
+        function kp(val) {
+          weightInput.value += val;
+        }
+
+        function kpDel() {
+          weightInput.value = weightInput.value.slice(0, -1);
+        }
+
+        function kpDone() {
+          kpClose();
+        }
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+          var valid = true;
+
+          var angler = document.getElementById('angler');
+          var anglerErr = document.getElementById('angler-error');
+          if (!angler.value || angler.value === 'none') {
+            anglerErr.style.display = 'block';
+            valid = false;
+          } else {
+            anglerErr.style.display = 'none';
+          }
+
+          var event = document.getElementById('event');
+          var eventErr = document.getElementById('event-error');
+          if (!event.value || event.value === 'none') {
+            eventErr.style.display = 'block';
+            valid = false;
+          } else {
+            eventErr.style.display = 'none';
+          }
+
+          var bassType = document.querySelector('input[name="bass_type"]:checked');
+          var bassErr = document.getElementById('bass-error');
+          if (!bassType) {
+            bassErr.style.display = 'block';
+            valid = false;
+          } else {
+            bassErr.style.display = 'none';
+          }
+
+          var val = document.getElementById('weight').value.trim();
+          var weightErr = document.getElementById('weight-error');
+          var lbsOz = /^\d{1,2}-\d{1,2}$/.test(val);
+          var decimal = /^\d{1,2}\.\d+$/.test(val);
+          if (!lbsOz && !decimal) {
+            weightErr.style.display = 'block';
+            valid = false;
+          } else {
+            weightErr.style.display = 'none';
+          }
+
+          if (!valid) e.preventDefault();
+        });
+      </script>
    </body>
 </html>
