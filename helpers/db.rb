@@ -4,7 +4,7 @@ require_relative '../secrets'
 # class to manage generic db functions
 class DB
   def initialize
-    @pg = PG.connect :hostaddr => Secrets.db_hostaddress, :dbname => Secrets.db_name, :user => Secrets.db_username, :password => Secrets.db_password
+    @pg = PG.connect :host => Secrets.db_hostaddress, :dbname => Secrets.db_name, :user => Secrets.db_username, :password => Secrets.db_password
   end
 
   def add_weight_entry(date, time, angler, event, weight, weight_decimal, weight_oz, bass_type, state, lake = nil)
