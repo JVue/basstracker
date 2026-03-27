@@ -10,11 +10,11 @@ A web app for tracking bass fishing tournament weights.
 
 ### Setup
 
-1. Copy the Docker env file and fill in your values:
+1. Create your env file from the example template:
    ```
-   cp env.docker env.docker
+   cp env.example env.docker
    ```
-   Edit `env.docker` with your credentials before starting.
+   Edit `env.docker` and fill in your values. Set `DB_HOST=postgres` and `REDIS_HOST=redis` for Docker Compose.
 
 2. Start all services (app, PostgreSQL, Redis):
    ```

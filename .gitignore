@@ -1,5 +1,7 @@
 env*
+!env.example
 secret*
+!secrets.rb
 cloudflare_origin_server.key
 cloudflare_origin_server.pem
 pat
